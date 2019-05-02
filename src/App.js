@@ -5,16 +5,28 @@ import List from './List';
 
 
 class App extends Component {
-  state = {
-    allCards: STORE.allCards,
-    lists: STORE.lists
+  state = {store: STORE }
+
+  handleDelete = (e) => {
+    const { lists, allCards } = this.state.store;
+    const deleteCard = lists.map(d => {
+      d.cardIds = d.cardIds.filter(id => id !== e);
+      return d;
+    });
+    delete allCards[e];
+    this.setState({
+      store: {
+        lists: deleteCard,
+        allCards
+      }
+    });
   }
 
   render() {
-    
-    const list = this.state.lists.map((item)=> {
+    const { store } = this.state;
+    const list = store.lists.map((item)=> {
       
-     return <List header={item.header} key={item.id} cards={STORE.allCards} />
+     return <List header={item.header} key={item.id} handleDelete={this.handleDelete} cards={STORE.allCards} />
     });
     return (
       <main className="App">
